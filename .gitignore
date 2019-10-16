@@ -1,2 +1,8 @@
 .DS_Store
 .idea/
+
+#Eclipse core
+.project
+
+#JDT-Specific
+.classpath
