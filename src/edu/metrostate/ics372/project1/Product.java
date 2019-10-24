@@ -1,19 +1,19 @@
 package edu.metrostate.ics372.project1;
 
-public class Products implements ProductsInterface {
+public class Product implements ProductInterface {
 	String productName;
 	Integer productId;
 	Double price;
 	Integer quantity;
 	
-	public Products(String productName, Integer productId, Double price, Integer quantity) {
+	public Product(String productName, Integer productId, Double price, Integer quantity) {
 		this.productName = productName;
 		this.productId = productId;
 		this.quantity = quantity;
 		this.price = (double) (Math.round(price * 100) / 100);
 	}
 	
-	public Products(String productName, Integer productId, Double price) {
+	public Product(String productName, Integer productId, Double price) {
 		this(productName, productId, price, 1);
 	}
 	
