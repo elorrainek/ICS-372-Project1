@@ -69,5 +69,10 @@ public class Member implements Serializable {
 	public boolean equals(String id) {
 		return this.id.equals(id);
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s\t%s\t%s\t%s", id, name, address, date);
+	}
 
 }
