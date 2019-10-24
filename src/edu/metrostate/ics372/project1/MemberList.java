@@ -3,7 +3,6 @@ package edu.metrostate.ics372.project1;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class MemberList implements Serializable{
 	private static final long serialVersionUID = 1L;
