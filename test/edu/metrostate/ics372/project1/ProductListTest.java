@@ -128,7 +128,7 @@ class ProductListTest {
 	}
 	
 	@Test
-	@DisplayName("it should remove a product from the list and return true")
+	@DisplayName("it should remove a product from the list")
 	void productList_removeProduct() {
 		Product product1 = new Product(getSaltString(), randIntBetween(100, 10_000), 
 				(double) (Math.round(RAND.nextDouble() * 100) / 100), 
@@ -155,7 +155,7 @@ class ProductListTest {
 	}
 	
 	@Test
-	@DisplayName("it should not remove a product if it is not in the list and return false")
+	@DisplayName("it should not remove a product if it is not in the list")
 	void productList_removeProduct_dne() {
 		Product product1 = new Product(getSaltString(), randIntBetween(100, 10_000), 
 				(double) (Math.round(RAND.nextDouble() * 100) / 100), 
