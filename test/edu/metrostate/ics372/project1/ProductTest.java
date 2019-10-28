@@ -110,18 +110,19 @@ class ProductTest {
 	}
 	
 	@Test
-	@DisplayName("it should adjust the product price using the setQuantity method")
+	@DisplayName("it add to the existing quantity using the setQuantity method")
 	void product_setQuantity() {
 		String productName = getSaltString();
 		int productId = randIntBetween(100, 10_000);
 		int quantity = randIntBetween(100, 10_000);
 		int adjustedQuantity = randIntBetween(100, 10_000);
 		Double price = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		int expected = quantity + adjustedQuantity;
 		
 		Product product = new Product(productName, productId, price, quantity);
-		product.setQuantity(adjustedQuantity);
+		product.adjustQuantity(adjustedQuantity);
 		
-		assertEquals(adjustedQuantity, product.getQuantity());
+		assertEquals(expected, product.getQuantity());
 	}
 	
 	@Test

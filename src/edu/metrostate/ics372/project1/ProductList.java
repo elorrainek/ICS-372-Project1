@@ -1,14 +1,15 @@
 package edu.metrostate.ics372.project1;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ProductList {
-	private Map<Integer, Product> listOfProducts;
+	private List<Product> listOfProducts;
+//	private Map<Integer, Product> listOfProducts;
 	private static ProductList productList;
 	
 	private ProductList() {
-		listOfProducts = new HashMap<>();
+		listOfProducts = new ArrayList<>();
 	}
 	
 	public static ProductList instance() {
@@ -23,8 +24,10 @@ public class ProductList {
 		Product searchResult = null;
 		int productId = product.getProductId();
 		
-		if (listOfProducts.containsKey(productId)) {
-			searchResult = listOfProducts.get(productId);
+		for(Product item: listOfProducts) {
+			if (productId == item.getProductId()) {
+				searchResult = item;
+			}
 		}
 			
 		return searchResult;
@@ -32,21 +35,40 @@ public class ProductList {
 	
 	public void addNewProduct(Product product) {
 		int productId = product.getProductId();
+		Product existingProduct = null;
+		int index = -1;
+		boolean productExists = false;
 		
-		if (!listOfProducts.containsKey(productId)) {
-			listOfProducts.put(productId, product);
+		for(Product item: listOfProducts) {
+			if (productId == item.getProductId()) {
+				productExists = true;
+				index = listOfProducts.indexOf(item);
+				existingProduct = new Product(item.getProductName(), item.getProductId(), 
+						item.getPrice(), item.getQuantity() + product.getQuantity());
+				break;
+			}
+		}
+		
+		if (!productExists) {
+			listOfProducts.add(product);
 		} else {
-			listOfProducts.get(productId).setQuantity(product.getQuantity());
+			listOfProducts.remove(index);
+			listOfProducts.add(index, existingProduct);
 		}
 	}
 	
 	public boolean removeProduct(Product product) {
 		boolean wasSuccessful = false;
 		int productId = product.getProductId();
+		int index = -1;
 		
-		if (listOfProducts.containsKey(productId)) {
-			listOfProducts.remove(productId);
-			wasSuccessful = true;
+		for (Product item: listOfProducts) {
+			if (productId == item.getProductId()) {
+				index = listOfProducts.indexOf(item);
+				listOfProducts.remove(index);
+				wasSuccessful = true;
+				break;
+			}
 		}
 		
 		return wasSuccessful;
