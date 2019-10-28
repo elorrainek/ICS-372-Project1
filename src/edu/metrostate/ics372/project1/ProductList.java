@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class ProductList {
 	private List<Product> listOfProducts;
-//	private Map<Integer, Product> listOfProducts;
 	private static ProductList productList;
 	
 	private ProductList() {
@@ -34,41 +33,26 @@ public class ProductList {
 	}
 	
 	public void addNewProduct(Product product) {
-		int productId = product.getProductId();
 		Product existingProduct = null;
-		int index = -1;
-		boolean productExists = false;
+		Product searchedProduct = search(product);
 		
-		for(Product item: listOfProducts) {
-			if (productId == item.getProductId()) {
-				productExists = true;
-				index = listOfProducts.indexOf(item);
-				existingProduct = new Product(item.getProductName(), item.getProductId(), 
-						item.getPrice(), item.getQuantity() + product.getQuantity());
-				break;
-			}
-		}
-		
-		if (!productExists) {
+		if (search(product) == null) {
 			listOfProducts.add(product);
 		} else {
-			listOfProducts.remove(index);
-			listOfProducts.add(index, existingProduct);
+			existingProduct = new Product(searchedProduct.getProductName(), 
+					searchedProduct.getProductId(), searchedProduct.getPrice(), 
+					searchedProduct.getQuantity() + product.getQuantity());
+			listOfProducts.remove(searchedProduct);
+			listOfProducts.add(existingProduct);
 		}
 	}
 	
 	public boolean removeProduct(Product product) {
 		boolean wasSuccessful = false;
-		int productId = product.getProductId();
-		int index = -1;
 		
-		for (Product item: listOfProducts) {
-			if (productId == item.getProductId()) {
-				index = listOfProducts.indexOf(item);
-				listOfProducts.remove(index);
-				wasSuccessful = true;
-				break;
-			}
+		if (search(product) != null) {
+			listOfProducts.remove(product);
+			wasSuccessful = true;
 		}
 		
 		return wasSuccessful;

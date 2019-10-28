@@ -106,7 +106,7 @@ class MemberTest {
 		String address = getSaltString();
 		Date date = new Date();
 		float fee = RAND.nextFloat();
-		String id = "M4";
+		String id = "M13";
 		
 		Member member = new Member(memberName, address, date, fee);
 		

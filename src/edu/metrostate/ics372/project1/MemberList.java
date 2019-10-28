@@ -1,16 +1,17 @@
 package edu.metrostate.ics372.project1;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+
 
 public class MemberList implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private Map<String, Member> listOfMembers;
+	private List<Member> listOfMembers;
 	private static MemberList memberList;
 
 	private MemberList() {
-		listOfMembers = new HashMap<>();
+		listOfMembers = new ArrayList<>();
 	}
 	
 	public static MemberList instance() {
@@ -25,8 +26,11 @@ public class MemberList implements Serializable{
 		Member searchResult = null;
 		String searchedMemberId = member.getMemberId();
 		
-		if (listOfMembers.containsKey(searchedMemberId)) {
-			searchResult = listOfMembers.get(searchedMemberId);
+		for(Member individual: listOfMembers) {
+			if (searchedMemberId.equals(individual.getMemberId())) {
+				searchResult = individual;
+				break;
+			}
 		}
 		
 		return searchResult;
@@ -34,10 +38,9 @@ public class MemberList implements Serializable{
 	
 	public boolean addNewMember(Member member) {
 		boolean wasSuccessful = false;
-		String memberId = member.getMemberId();
 		
-		if (!listOfMembers.containsKey(memberId)) {
-			listOfMembers.put(memberId, member);
+		if (search(member) == null) {
+			listOfMembers.add(member);
 			wasSuccessful = true;
 		}
 		
@@ -46,10 +49,9 @@ public class MemberList implements Serializable{
 	
 	public boolean removeMember(Member member) {
 		boolean wasSuccessful = false;
-		String memberId = member.getMemberId();
 		
-		if (listOfMembers.containsKey(memberId)) {
-			listOfMembers.remove(memberId);
+		if (search(member) != null) {
+			listOfMembers.remove(member);
 			wasSuccessful = true;
 		}
 		
