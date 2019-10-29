@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 class MemberIdServerTest {
-	
 	@Test
 	@DisplayName("it should return an instance of MemberIdServer")
 	void MemberIdServer_instance() {
@@ -16,12 +15,18 @@ class MemberIdServerTest {
 	@Test
 	@DisplayName("it should return the current id counter")
 	void MemberIdServer_toString() {
-		assertEquals("IdServer2", MemberIdServer.instance().toString());
+		int expected = getCurrentCount() + 1;
+		assertEquals("IdServer" + expected, MemberIdServer.instance().toString());
 	}
 	
 	@Test
 	@DisplayName("it should return an incremented value of idCounter")
 	void MemberIdServer_getId() {
-		assertEquals(1, MemberIdServer.instance().getId());
+		int expected = getCurrentCount() + 1;
+		assertEquals(expected, MemberIdServer.instance().getId());
+	}
+	
+	private int getCurrentCount() {
+		return MemberIdServer.instance().getId();
 	}
 }

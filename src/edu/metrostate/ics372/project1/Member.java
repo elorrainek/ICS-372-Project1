@@ -10,12 +10,14 @@ public class Member implements Serializable {
 	private String address;
 	private Date date;
 	private static final String MEMBER_STRING = "M";
+	private boolean feePaid;
 
-	public Member(String name, String address, Date date, float feePaid) {
+	public Member(String name, String address, Date date, boolean feePaid) {
 		this.name = name;
 		this.address = address;
 		this.date = date;
 		id = MEMBER_STRING + (MemberIdServer.instance()).getId();
+		this.feePaid = feePaid;
 	}
 
 	public String getMemberName() {
@@ -57,12 +59,11 @@ public class Member implements Serializable {
 	}
 
 	public boolean getFeePaid() {
-		// TODO Auto-generated method stub
-		return false;
+		return feePaid;
 	}
 
-	public void setFeePaid(float amount) {
-		// TODO Auto-generated method stub
+	public void setFeePaid(boolean feePaid) {
+		this.feePaid = feePaid;
 		
 	}
 	

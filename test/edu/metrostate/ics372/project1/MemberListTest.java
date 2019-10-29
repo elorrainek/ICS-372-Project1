@@ -23,7 +23,7 @@ class MemberListTest {
 		String name = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float feePaid = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
 		MemberList members = MemberList.instance();
@@ -36,7 +36,7 @@ class MemberListTest {
 		String name = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float feePaid = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
 		MemberList members = MemberList.instance();
@@ -51,7 +51,7 @@ class MemberListTest {
 		String name = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float feePaid = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
 		MemberList members = MemberList.instance();
@@ -66,14 +66,14 @@ class MemberListTest {
 		String name = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float feePaid = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
 		MemberList members = MemberList.instance();
 		members.addNewMember(member);
 		
 		assertFalse(member.equals(members.search(
-				new Member(getSaltString(), getSaltString(), new Date(), RAND.nextFloat()))));
+				new Member(getSaltString(), getSaltString(), new Date(), RAND.nextBoolean()))));
 	}
 	
 	@Test
@@ -82,7 +82,7 @@ class MemberListTest {
 		String name = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float feePaid = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
 		MemberList members = MemberList.instance();
@@ -97,14 +97,14 @@ class MemberListTest {
 		String name = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float feePaid = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
 		MemberList members = MemberList.instance();
 		members.addNewMember(member);
 		
 		assertFalse(members.removeMember(
-				new Member(getSaltString(), getSaltString(), new Date(), RAND.nextFloat())));
+				new Member(getSaltString(), getSaltString(), new Date(), RAND.nextBoolean())));
 	}
 	
 	private String getSaltString() {

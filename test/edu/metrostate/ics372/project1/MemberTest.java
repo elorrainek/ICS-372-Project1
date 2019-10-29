@@ -18,9 +18,9 @@ class MemberTest {
 		String memberName = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float fee = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		
-		Member member = new Member(memberName, address, date, fee);
+		Member member = new Member(memberName, address, date, feePaid);
 		
 		assertEquals(memberName, member.getMemberName());
 	}
@@ -31,11 +31,11 @@ class MemberTest {
 		String memberName = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float fee = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		
 		String alteredName = getSaltString();
 		
-		Member member = new Member(memberName, address, date, fee);
+		Member member = new Member(memberName, address, date, feePaid);
 		member.setMemberName(alteredName);
 		
 		assertEquals(alteredName, member.getMemberName());
@@ -47,9 +47,9 @@ class MemberTest {
 		String memberName = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float fee = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		
-		Member member = new Member(memberName, address, date, fee);
+		Member member = new Member(memberName, address, date, feePaid);
 		
 		assertEquals(address, member.getMemberAddress());
 	}
@@ -60,11 +60,11 @@ class MemberTest {
 		String memberName = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float fee = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		
 		String alteredAddress = getSaltString();
 		
-		Member member = new Member(memberName, address, date, fee);
+		Member member = new Member(memberName, address, date, feePaid);
 		member.setMemberAddress(alteredAddress);
 		
 		assertEquals(alteredAddress, member.getMemberAddress());
@@ -76,9 +76,9 @@ class MemberTest {
 		String memberName = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float fee = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		
-		Member member = new Member(memberName, address, date, fee);
+		Member member = new Member(memberName, address, date, feePaid);
 		
 		assertEquals(date, member.getMemberJoinDate());
 	}
@@ -89,11 +89,11 @@ class MemberTest {
 		String memberName = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float fee = RAND.nextFloat();
+		boolean feePaid = RAND.nextBoolean();
 		
 		Date alteredDate = new Date(RAND.nextLong());
 		
-		Member member = new Member(memberName, address, date, fee);
+		Member member = new Member(memberName, address, date, feePaid);
 		member.setMemberJoinDate(alteredDate);
 		
 		assertEquals(alteredDate, member.getMemberJoinDate());
@@ -105,14 +105,42 @@ class MemberTest {
 		String memberName = getSaltString();
 		String address = getSaltString();
 		Date date = new Date();
-		float fee = RAND.nextFloat();
-		String id = "M13";
+		boolean feePaid = RAND.nextBoolean();
+		int current = getCurrentCount() + 1;
+		String id = "M" + current;
 		
-		Member member = new Member(memberName, address, date, fee);
+		Member member = new Member(memberName, address, date, feePaid);
 		
 		assertEquals(id, member.getMemberId());
 	}
 	
+	@Test
+	@DisplayName("it should return the boolean if the guest has paid the fee")
+	void member_getFeePaid() {
+		String memberName = getSaltString();
+		String address = getSaltString();
+		Date date = new Date();
+		boolean feePaid = RAND.nextBoolean();
+		
+		Member member = new Member(memberName, address, date, feePaid);
+		
+		assertEquals(feePaid, member.getFeePaid());
+	}
+	
+	@Test
+	@DisplayName("it should set the boolean for the fee paid")
+	void member_setFeePaid() {
+		String memberName = getSaltString();
+		String address = getSaltString();
+		Date date = new Date();
+		boolean feePaid = false;
+		
+		Member member = new Member(memberName, address, date, feePaid);
+		member.setFeePaid(true);
+		
+		assertEquals(true, member.getFeePaid());
+	}
+
 	private String getSaltString() {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         StringBuilder salt = new StringBuilder();
@@ -123,6 +151,10 @@ class MemberTest {
         }
         String saltStr = salt.toString();
         return saltStr;
+	}
+	
+	private int getCurrentCount() {
+		return MemberIdServer.instance().getId();
 	}
 
 }
