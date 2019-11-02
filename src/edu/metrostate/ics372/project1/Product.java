@@ -48,4 +48,17 @@ public class Product {
 	public void adjustQuantity(Integer quantity) {
 		this.quantity += quantity;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		boolean isTrue = false;
+		
+		if (o instanceof Product) {
+			if (productId == ((Product) o).getProductId()) {
+				isTrue = true;
+			}
+		}
+		
+		return isTrue;
+	}
 }

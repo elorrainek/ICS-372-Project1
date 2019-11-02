@@ -22,12 +22,11 @@ public class MemberList implements Serializable{
 		}
 	}
 	
-	public Member search(Member member) {
+	public Member search(String memberId) {
 		Member searchResult = null;
-		String searchedMemberId = member.getMemberId();
 		
 		for(Member individual: listOfMembers) {
-			if (searchedMemberId.equals(individual.getMemberId())) {
+			if (memberId.equals(individual.getMemberId())) {
 				searchResult = individual;
 				break;
 			}
@@ -39,7 +38,7 @@ public class MemberList implements Serializable{
 	public boolean addNewMember(Member member) {
 		boolean wasSuccessful = false;
 		
-		if (search(member) == null) {
+		if (search(member.getMemberId()) == null) {
 			listOfMembers.add(member);
 			wasSuccessful = true;
 		}
@@ -47,10 +46,11 @@ public class MemberList implements Serializable{
 		return wasSuccessful;
 	}
 	
-	public boolean removeMember(Member member) {
+	public boolean removeMember(String memberId) {
 		boolean wasSuccessful = false;
+		Member member = search(memberId);
 		
-		if (search(member) != null) {
+		if (member != null) {
 			listOfMembers.remove(member);
 			wasSuccessful = true;
 		}
@@ -58,8 +58,21 @@ public class MemberList implements Serializable{
 		return wasSuccessful;
 	}
 	
-	public String print() {
-		//TODO: print all members in list
-		return null;
+	public String getAllMembers() {
+		String members = "";
+		
+		for(Member member: listOfMembers) {
+			if (listOfMembers.indexOf(member) == listOfMembers.size() - 1) {
+				members += member.getMemberName();
+			} else {
+				members += member.getMemberName() + "\n";
+			}
+		}
+		
+		return members;
+	}
+	
+	public static void clearInstance() {
+		memberList = null;
 	}
 }
