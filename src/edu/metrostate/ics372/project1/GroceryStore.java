@@ -1,95 +1,96 @@
 package edu.metrostate.ics372.project1;
 
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-//TODO: create main collection class for all collections
 public class GroceryStore {
-	private ArrayList<ProductList> inventory;
-	private ArrayList<Product> cart;
-	private ArrayList<MemberList> members;
-	private final boolean SuccessOfOperation = true;
-	int inventoryCount;
-	int cartCount;
+	private ProductList inventory;
+	private CartList processedOrders;
+	private MemberList members;
+	private static GroceryStore groceryStore;
 	int membersInList;
 
-	public GroceryStore() {
-		this.inventory = new ArrayList<ProductList>();
-		this.cart = new ArrayList<Product>();
-		this.members = new ArrayList<MemberList>();
+	private GroceryStore() {
+		inventory = ProductList.instance();
+		members = MemberList.instance();
+		processedOrders = CartList.instance();
 	}
-
-	public boolean addToInventory(ProductList product) {
-		if (product != null) {
-			inventory.add(product);
-			inventoryCount++;
-			System.out.println("PRODUCT HAS BEEN ADDED TO INVENTORY: " + product);
-			System.out.println("Inventory Stock: " + inventoryCount);
-			return SuccessOfOperation;
-		} else {
-			return false;
+	
+	public static GroceryStore instance() {
+		if (groceryStore == null) {
+			MemberIdServer.instance();
+			groceryStore = new GroceryStore();
 		}
+		
+		return groceryStore;
 	}
 
-	public boolean removeFromInventory(ProductList item) {
+	public boolean addToInventory(String productName, Integer productId, Double price) {
+		return inventory.addNewProduct(productName, productId, price);
+	}
+	
+	public boolean addToInventory(String productName, Integer productId, Double price, 
+			Integer quantity) {
+		return inventory.addNewProduct(productName, productId, price, quantity);
+	}
+
+	public boolean removeFromInventory(Product item) {
 		if (item != null) {
-			inventory.remove(item);
-			inventoryCount--;
-			System.out.println("PRODUCT HAS BEEN REMOVED FROM INVENTORY: " + item);
-			System.out.println("Inventory Stock: " + inventoryCount);
-			return SuccessOfOperation;
+			return inventory.removeProduct(item);
 		} else {
 			return false;
 		}
 	}
 
-	public boolean addToCart(Product item) {
-		if (item != null) {
-			cart.add(item);
-			cartCount++;
-			System.out.println("PRODUCT HAS BEEN ADDED TO CART: " + item);
-			System.out.println("Cart Items: " + cartCount);
-			return SuccessOfOperation;
-		} else {
-			return false;
-		}
+	public boolean addToCart(String memberId, Date date, Integer productId, 
+			Integer quantity) {
+		Product product = inventory.search(productId);
+		inventory.adjustQuantity(product, quantity);
+		
+		return processedOrders.addToCart(memberId, date, product);
+	}
+//
+//	public boolean removeFromCart(Product item) {
+//		if (item != null) {
+//			cart.remove(item);
+//			return SuccessOfOperation;
+//		} else {
+//			return false;
+//		}
+//
+//	}
+	
+	//String name, String address, Date date, boolean feePaid
+	public boolean addToMemberList(String name, String address, Date date, boolean feePaid) {
+		return members.addNewMember(new Member(name, address, date, feePaid));
+	}
+	
+	public boolean adjustProductPrice(Integer productId, double price) {
+		return inventory.adjustProductPrice(productId, price);
+	}
+	
+	public Product getProductInfo(String productName) {
+		return inventory.search(productName);
 	}
 
-	public boolean removeFromCart(Product item) {
-		if (item != null) {
-			cart.remove(item);
-			cartCount--;
-			System.out.println("PRODUCT HAS BEEN REMOVED FROM CART: " + item);
-			System.out.println("Cart Items: " + cartCount);
-			return SuccessOfOperation;
-		} else {
-			return false;
-		}
-
+	public boolean removeFromMemberList(String memberId) {
+		return members.removeMember(memberId);
 	}
-
-	public boolean addToMemberList(MemberList member) {
-		if (member != null) {
-			members.add(member);
-			membersInList++;
-			System.out.println("MEMBER HAS BEEN ADDED: " + member);
-			System.out.println("Members in List: " + membersInList);
-			return SuccessOfOperation;
-		} else {
-			return false;
-		}
-
+	
+	public String retrieveAllMembers() {
+		return members.getAllMembers();
 	}
-
-	public boolean removeFromMemberList(MemberList member) {
-		if (member != null) {
-			members.remove(member);
-			membersInList--;
-			System.out.println("MEMBER HAS BEEN REMOVED: " + member);
-			System.out.println("Members in List: " + membersInList);
-			return SuccessOfOperation;
-		} else {
-			return false;
-		}
+	
+	public List<Product> retrieveAllProducts() {
+		return inventory.getAllProducts();
+	}
+	
+	public static void clearInstance() {
+		groceryStore = null;
+	}
+	
+	public CartList getProcessedOrders() {
+		return this.processedOrders;
 	}
 
 }

@@ -19,12 +19,22 @@ public class ProductList {
 		}
 	}
 	
-	public Product search(Product product) {
+	public Product search(int productId) {
 		Product searchResult = null;
-		int productId = product.getProductId();
-		
 		for(Product item: listOfProducts) {
 			if (productId == item.getProductId()) {
+				searchResult = item;
+				break;
+			}
+		}
+			
+		return searchResult;
+	}
+	
+	public Product search(String productName) {
+		Product searchResult = null;
+		for(Product item: listOfProducts) {
+			if (productName.equals(item.getProductName())) {
 				searchResult = item;
 			}
 		}
@@ -32,25 +42,68 @@ public class ProductList {
 		return searchResult;
 	}
 	
-	public void addNewProduct(Product product) {
+	public boolean addNewProduct(String productName, Integer productId, Double price) {
 		Product existingProduct = null;
-		Product searchedProduct = search(product);
+		Product searchedProduct = search(productId);
 		
-		if (search(product) == null) {
-			listOfProducts.add(product);
+		if (searchedProduct == null) {
+			listOfProducts.add(new Product(productName, productId, price));
 		} else {
 			existingProduct = new Product(searchedProduct.getProductName(), 
-					searchedProduct.getProductId(), searchedProduct.getPrice(), 
-					searchedProduct.getQuantity() + product.getQuantity());
+					searchedProduct.getProductId(), searchedProduct.getPrice());
 			listOfProducts.remove(searchedProduct);
 			listOfProducts.add(existingProduct);
 		}
+		
+		return true;
+	}
+	
+	public boolean addNewProduct(String productName, Integer productId, Double price, 
+			Integer quantity) {
+		Product searchedProduct = search(productId);
+		
+		if (searchedProduct == null) {
+			listOfProducts.add(new Product(productName, productId, price));
+		} else {
+			listOfProducts.set(listOfProducts.indexOf(searchedProduct),
+					new Product(searchedProduct.getProductName(), 
+							searchedProduct.getProductId(), searchedProduct.getPrice(), 
+							searchedProduct.getQuantity() + quantity));
+		}
+		
+		return true;
+	}
+	
+	public List<Product> getAllProducts() {
+		return this.listOfProducts;
+	}
+	
+	public boolean adjustProductPrice(Integer productId, double price) {
+		boolean wasSuccessful = false;
+		Product searchedProduct = search(productId);
+		
+		if (searchedProduct != null) {
+			searchedProduct.setPrice(price);
+			wasSuccessful = true;
+		}
+		
+		return wasSuccessful;
+	}
+	
+	public void adjustQuantity(Product product, Integer itemsRemoved) {
+		listOfProducts.set(listOfProducts.indexOf(product),
+				new Product(product.getProductName(), product.getProductId(),
+						product.getPrice(), product.getQuantity() - itemsRemoved));
+	}
+	
+	public static void clearInstance() {
+		productList = null;
 	}
 	
 	public boolean removeProduct(Product product) {
 		boolean wasSuccessful = false;
 		
-		if (search(product) != null) {
+		if (search(product.getProductId()) != null) {
 			listOfProducts.remove(product);
 			wasSuccessful = true;
 		}
