@@ -8,17 +8,21 @@ import java.util.Date;
 public class UserInterface {
 	private static UserInterface userInterface;
 	private static GroceryStore groceryStore;
-	private static final String EXIT = "0";
-	private static final String PRINT_MEMBER_DETAILS = "1";
-	private static final String ADD_MEMBER = "2";
-	private static final String REMOVE_MEMBER = "3";
-	private static final String INVENTORY_INFO = "4";
-	private static final String ADD_PRODUCT = "5";
-	private static final String ADJUST_PRICE = "6";
-	private static final String PRODUCT_INFO = "7";
-	private static final String CHECKOUT_MEMBER = "8";
-	private static final String REMOVE_FROM_CART = "9";
-	private static final String HELP = "help";
+	private static final String EXIT = "0";	
+	private static final String ADD_MEMBER = "1";
+	private static final String REMOVE_MEMBER = "2";
+	private static final String GET_MEMBER_INFO = "3"; // implement
+	private static final String ADD_PRODUCT = "4"; 
+	private static final String CHECKOUT_MEMBER = "5";
+	private static final String PRODUCT_INFO = "6";
+	private static final String PROCESS_SHIPMENT = "7"; // reuse 4? implement
+	private static final String ADJUST_PRICE = "8"; 
+	private static final String PRINT_TRANSACTIONS = "9"; //implement
+	private static final String PRINT_MEMBER_DETAILS = "10"; //implement
+	private static final String INVENTORY_INFO = "11";
+	private static final String SAVE = "12";
+	private static final String RETRIEVE = "13";
+	private static final String HELP = "14";
 	private static final String INVALID = "Invalid entry";
 	
 	private UserInterface() {
@@ -39,17 +43,20 @@ public class UserInterface {
 		String message = "Enter a number between 0 and 12 as explained below:\n";
 		
 		message += "0 to Exit\n";
-		message += "1 to retrieve all member names\n";
-		message += "2 to add a member\n";
-		message += "3 to remove a member\n";
-		message += "4 to retrieve inventory information\n";
-		message += "5 to add a product in inventory\n";
-		message += "6 to edit product price\n";
-		message += "7 to retrieve product info\n";
-		message += "8 to add a product to a member's cart\n";
-		message += "9 to remove a product from a member's cart\n";
-		message += "10 to remove a product\n";
-		message += "11 save all information to disk\n";
+		message += "1 to add a member\n";
+		message += "2 to remove a member\n";
+		message += "3 to retrieve a member's information\n";
+		message += "4 to add a product in inventory\n";
+		message += "5 to checkout a member's cart\n";
+		message += "6 to retrieve a product's information\n";
+		message += "7 to process a shipment\n";
+		message += "8 to adjust the price of an item\n";
+		message += "9 to print all transactions for a member\n";
+		message += "10 to display all members\n";
+		message += "11 to display all iventory\n";		
+		message += "12 to save all data to disk\n";
+		// only display retrieve option in first menu		
+		message += "14 to display list of commands\n";
 		
 		return message;
 	}
@@ -216,6 +223,27 @@ public class UserInterface {
 		}while(yesOrNo("Process more items? (y/n) ", br));
 	}
 	
+	private void save() {
+		if(GroceryStore.save()) {
+			System.out.println("The Grocery Store data has been saved to file "GroceryStoreData"");
+		}
+		else {
+			System.out.println("Error in saving");
+		}
+	}
+	
+	private void retrieve() {
+		try {
+			GroceryStore tempGroceryStore = GroceryStore.retrieve();
+			if ( tempGroceryStore != null) {
+				System.out.println("The Grocery Store was retrieved from file "GroceryStoreData"");
+				groceryStore = tempGroceryStore;
+			}
+			else {
+				System.out.println("File doesn't exist; creating a new Grocery Store");
+				groceryStore = GroceryStore.instance();
+			}
+
 	public void displayOptions() {
 		String input;
 		System.out.println(help());
@@ -225,31 +253,54 @@ public class UserInterface {
 			case HELP:
 				System.out.println("\n\n" + help());
 				break;
-			case PRINT_MEMBER_DETAILS:
+			case ADJUST_PRICE: // 8
+				adjustPrice(br);
+				break;
+			case ADD_MEMBER: // 1
+				addNewMember(br);
+				break;
+			case REMOVE_MEMBER: // 2
+				removeMember(br);
+				break;
+			case GET_MEMBER_INFO: // 3
+				//implement
+				break;
+			case ADD_PRODUCT: // 4
+				addNewProduct(br);
+				break;
+			case CHECKOUT_MEMBER: // 5
+				checkoutMember(br);
+				break;
+			case PRODUCT_INFO: // 6
+				getProductInfo(br);
+				break;
+			case PROCESS_SHIPMENT: // 7
+				//implement
+				break;
+			case ADJUST_PRICE: // 8
+				adjustPrice(br);
+				break;
+			case PRINT_TRANSACTIONS: //9
+				//implement
+				break;
+				break;
+			case PRINT_MEMBER_DETAILS: //10
 				System.out.println(groceryStore.retrieveAllMembers());
 				System.out.println("\n\n" + help());
 				break;
-			case ADD_MEMBER:
-				addNewMember(br);
-				break;
-			case REMOVE_MEMBER:
-				removeMember(br);
-				break;
-			case INVENTORY_INFO:
+			case INVENTORY_INFO: // 11
 				System.out.println(groceryStore.retrieveAllProducts());
 				System.out.println("\n\n" + help());
-			case ADD_PRODUCT:
-				addNewProduct(br);
+			case SAVE: // 12
+				save();
+				break;	
+			case RETRIEVE: //13
+				retreive();
 				break;
-			case ADJUST_PRICE:
-				adjustPrice(br);
+			case HELP: //14
+				help();
 				break;
-			case PRODUCT_INFO:
-				getProductInfo(br);
-				break;
-			case CHECKOUT_MEMBER:
-				checkoutMember(br);
-				break;
+			
 			default:
 				System.out.println(INVALID);
 				System.out.println("\n\n" + help());
