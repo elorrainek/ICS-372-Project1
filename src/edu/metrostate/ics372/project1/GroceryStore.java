@@ -53,8 +53,14 @@ public class GroceryStore implements Serializable {
 			Integer productId, Integer quantity) {
 		Product product = inventory.search(productId);
 		inventory.adjustQuantity(product, quantity);
+		Product itemAddedToCart = new Product(product.getProductName(),
+				product.getProductId(), product.getPrice(), quantity);
 		
-		return processedOrders.addToCart(memberId, date, product);
+		if (inventory.checkLowInventory(product)) {
+			inventory.addToLowInventoryItemsList(product);
+		}
+		
+		return processedOrders.addToCart(memberId, date, itemAddedToCart);
 	}
 //
 //	public boolean removeFromCart(Product item) {
