@@ -12,10 +12,19 @@ public class MemberIdServer implements Serializable {
 	private int idCounter;
 	private static MemberIdServer server;
 	
+	/**
+	 * MemberIdSever Visibilty is Private 
+	 * idCounter is assigned to 1
+	 */
 	private MemberIdServer() {
 		idCounter = 1;
 	}
 	
+	/**
+	 * 
+	 * @return instance of MemberIdServer
+	 * 
+	 */
 	public static MemberIdServer instance() {
 		if (server == null) {
 			return (server = new MemberIdServer());
@@ -24,6 +33,13 @@ public class MemberIdServer implements Serializable {
 		}
 	}
 	
+	/**
+	 * This Method gets ID 
+	 * We assign CurrentId to id Counter
+	 * then we increment idCounter
+	 * 
+	 * @return currentID
+	 */
 	public int getId() {
 		int currentId = idCounter;
 		idCounter++;
