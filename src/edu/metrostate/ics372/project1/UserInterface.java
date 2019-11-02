@@ -243,6 +243,10 @@ public class UserInterface {
 				System.out.println("File doesn't exist; creating a new Grocery Store");
 				groceryStore = GroceryStore.instance();
 			}
+		} catch(Exception cnfe) {
+			cnfe.printStackTrace();
+		}
+	}
 
 	public void displayOptions() {
 		String input;
@@ -280,7 +284,6 @@ public class UserInterface {
 			case PRINT_TRANSACTIONS: //9
 				//implement
 				break;
-				break;
 			case PRINT_MEMBER_DETAILS: //10
 				System.out.println(groceryStore.retrieveAllMembers());
 				System.out.println("\n\n" + help());
@@ -292,7 +295,7 @@ public class UserInterface {
 				save();
 				break;	
 			case RETRIEVE: //13
-				retreive();
+				retrieve();
 				break;
 			
 			default:
