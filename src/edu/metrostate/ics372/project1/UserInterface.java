@@ -3,7 +3,7 @@ package edu.metrostate.ics372.project1;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class UserInterface {
 	private static UserInterface userInterface;
@@ -121,7 +121,7 @@ public class UserInterface {
 			String address = prompt("Enter the new member's address: ", br);
 			boolean feePaid = yesOrNo("Will the new member be paying the joining fee today? (y/n) ", 
 					br);
-			Date date = new Date();
+			GregorianCalendar date = new GregorianCalendar();
 			
 			boolean wasSuccessful = groceryStore.addToMemberList(name, address, date, feePaid);
 			
@@ -225,7 +225,7 @@ public class UserInterface {
 	
 	private void save() {
 		if(GroceryStore.save()) {
-			System.out.println("The Grocery Store data has been saved to file "GroceryStoreData"");
+			System.out.println("The Grocery Store data has been saved to file 'GroceryStoreData'");
 		}
 		else {
 			System.out.println("Error in saving");
@@ -236,7 +236,7 @@ public class UserInterface {
 		try {
 			GroceryStore tempGroceryStore = GroceryStore.retrieve();
 			if ( tempGroceryStore != null) {
-				System.out.println("The Grocery Store was retrieved from file "GroceryStoreData"");
+				System.out.println("The Grocery Store was retrieved from file 'GroceryStoreData'");
 				groceryStore = tempGroceryStore;
 			}
 			else {
@@ -277,9 +277,6 @@ public class UserInterface {
 			case PROCESS_SHIPMENT: // 7
 				//implement
 				break;
-			case ADJUST_PRICE: // 8
-				adjustPrice(br);
-				break;
 			case PRINT_TRANSACTIONS: //9
 				//implement
 				break;
@@ -296,9 +293,6 @@ public class UserInterface {
 				break;	
 			case RETRIEVE: //13
 				retreive();
-				break;
-			case HELP: //14
-				help();
 				break;
 			
 			default:
