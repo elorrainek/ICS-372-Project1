@@ -57,7 +57,7 @@ class MemberListTest {
 		MemberList members = MemberList.instance();
 		members.addNewMember(member);
 		
-		assertTrue(member.equals(members.search(member)));
+		assertTrue(member.equals(members.search(member.getMemberId())));
 	}
 	
 	@Test
@@ -72,8 +72,9 @@ class MemberListTest {
 		MemberList members = MemberList.instance();
 		members.addNewMember(member);
 		
-		assertFalse(member.equals(members.search(
-				new Member(getSaltString(), getSaltString(), new Date(), RAND.nextBoolean()))));
+		Member searchedMember = new Member(getSaltString(), getSaltString(), new Date(), RAND.nextBoolean());
+		
+		assertFalse(member.equals(members.search(searchedMember.getMemberId())));
 	}
 	
 	@Test
@@ -87,8 +88,8 @@ class MemberListTest {
 		
 		MemberList members = MemberList.instance();
 		members.addNewMember(member);
-		assertTrue(members.removeMember(member));
-		assertFalse(member.equals(members.search(member)));
+		assertTrue(members.removeMember(member.getMemberId()));
+		assertFalse(member.equals(members.search(member.getMemberId())));
 	}
 	
 	@Test
@@ -103,8 +104,45 @@ class MemberListTest {
 		MemberList members = MemberList.instance();
 		members.addNewMember(member);
 		
-		assertFalse(members.removeMember(
-				new Member(getSaltString(), getSaltString(), new Date(), RAND.nextBoolean())));
+		Member removeMember = new Member(getSaltString(), getSaltString(), new Date(), RAND.nextBoolean());
+		
+		assertFalse(members.removeMember(removeMember.getMemberId()));
+	}
+	
+	@Test
+	@DisplayName("it should return formatted string of all members in list")
+	void memberList_getAllMembers() {
+		String name1 = getSaltString();
+		String address1 = getSaltString();
+		Date date1 = new Date();
+		boolean feePaid1 = RAND.nextBoolean();
+		Member member1 = new Member(name1, address1, date1, feePaid1);
+		
+		String name2 = getSaltString();
+		String address2 = getSaltString();
+		Date date2 = new Date();
+		boolean feePaid2 = RAND.nextBoolean();
+		Member member2 = new Member(name2, address2, date2, feePaid2);
+		
+		String name3 = getSaltString();
+		String address3 = getSaltString();
+		Date date3 = new Date();
+		boolean feePaid3 = RAND.nextBoolean();
+		Member member3 = new Member(name3, address3, date3, feePaid3);
+		
+		MemberList.clearInstance();
+		MemberList members = MemberList.instance();
+		members.addNewMember(member1);
+		members.addNewMember(member2);
+		members.addNewMember(member3);
+		
+		String listOfMembers = members.getAllMembers();
+		
+		String expected = String.format("%s\n%s\n%s", member1.getMemberName(), 
+				member2.getMemberName(), member3.getMemberName());
+		
+		assertEquals(expected, listOfMembers);
+		
 	}
 	
 	private String getSaltString() {
