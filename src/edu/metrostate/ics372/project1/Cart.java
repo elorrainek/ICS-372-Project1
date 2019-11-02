@@ -1,18 +1,23 @@
 package edu.metrostate.ics372.project1;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Cart {
 	private String memberId;
-	private Date date;
+	private GregorianCalendar date;
 	private List<Product> cart;
 	
-	public Cart(String memberId, Date date) {
+	public Cart(String memberId, GregorianCalendar date) {
 		this.memberId = memberId;
 		this.date = date;
 		cart = new ArrayList<>();
+	}
+	
+	public Cart(String memberId, GregorianCalendar date, Product product) {
+		this(memberId, date);
+		cart.add(product);
 	}
 	
 	public String getMemberId() {
@@ -24,7 +29,14 @@ public class Cart {
 	}
 	
 	public void addToCart(Product product) {
-		cart.add(product);
+		if(cart.contains(product) ) {
+			Product temp = cart.get(cart.indexOf(product));
+			cart.set(cart.indexOf(product), new Product(product.getProductName(),
+					product.getProductId(), product.getPrice(), product.getQuantity() + 
+					temp.getQuantity()));
+		} else {
+			cart.add(product);
+		}
 	}
 	
 	public double getTotal() {
@@ -37,7 +49,7 @@ public class Cart {
 		return total;
 	}
 	
-	public Date getProcessDate() {
+	public GregorianCalendar getProcessDate() {
 		return this.date;
 	}
 	
@@ -53,5 +65,10 @@ public class Cart {
 		}
 		
 		return isTrue;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("MemberID: %s\nCart: %s", memberId, cart);
 	}
 }

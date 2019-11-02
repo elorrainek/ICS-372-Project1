@@ -26,9 +26,7 @@ class UserInteraceTest {
 		expected += "6 to edit product price\n";
 		expected += "7 to retrieve product info\n";
 		expected += "8 to add a product to a member's cart\n";
-		expected += "9 to remove a product from a member's cart\n";
-		expected += "10 to remove a product\n";
-		expected += "11 save all information to disk\n";
+		expected += "9 save all information to disk\n";
 		
 		assertEquals(expected, UserInterface.instance().help());
 	}

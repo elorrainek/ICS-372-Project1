@@ -1,7 +1,7 @@
 package edu.metrostate.ics372.project1;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class CartList {
@@ -24,7 +24,7 @@ public class CartList {
 		return this.listOfCarts;
 	}
 	
-	public Cart search(String memberId, Date date) {
+	public Cart search(String memberId, GregorianCalendar date) {
 		Cart searchResult = null;
 		
 		for (Cart cart: listOfCarts) {
@@ -37,18 +37,22 @@ public class CartList {
 		return searchResult;
 	}
 	
-	public void addNewCart(String memberId, Date date) {
+	public void addNewCart(String memberId, GregorianCalendar date) {
 		listOfCarts.add(new Cart(memberId, date));
 	}
 	
-	public boolean addToCart(String memberId, Date date, Product product) {
+	public void addNewCart(String memberId, GregorianCalendar date, Product product) {
+		listOfCarts.add(new Cart(memberId, date, product));
+	}
+	
+	public boolean addToCart(String memberId, GregorianCalendar date, Product product) {
 		Cart searchedCart = search(memberId, date);
 
 		if (searchedCart == null) {
-			addNewCart(memberId, date);
+			addNewCart(memberId, date, product);
 		} else {
-			listOfCarts.set(listOfCarts.indexOf(searchedCart), 
-					new Cart(searchedCart.getMemberId(), searchedCart.getProcessDate()));
+			searchedCart.addToCart(product);
+			listOfCarts.set(listOfCarts.indexOf(searchedCart), searchedCart);
 		}
 		return true;
 	}

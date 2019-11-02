@@ -2,7 +2,7 @@ package edu.metrostate.ics372.project1;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ class MemberTest {
 	void member_getMemberName() {
 		String memberName = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		
 		Member member = new Member(memberName, address, date, feePaid);
@@ -30,7 +30,7 @@ class MemberTest {
 	void member_setMemberName() {
 		String memberName = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		
 		String alteredName = getSaltString();
@@ -46,7 +46,7 @@ class MemberTest {
 	void member_getMemberAddress() {
 		String memberName = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		
 		Member member = new Member(memberName, address, date, feePaid);
@@ -59,7 +59,7 @@ class MemberTest {
 	void member_setMemberAddress() {
 		String memberName = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		
 		String alteredAddress = getSaltString();
@@ -75,7 +75,7 @@ class MemberTest {
 	void member_getMemberJoinDate() {
 		String memberName = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		
 		Member member = new Member(memberName, address, date, feePaid);
@@ -88,10 +88,13 @@ class MemberTest {
 	void member_setMemberJoinDate() {
 		String memberName = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		
-		Date alteredDate = new Date(RAND.nextLong());
+		GregorianCalendar alteredDate = 
+				new GregorianCalendar(randIntBetween(1900, 2019)
+						, randIntBetween(1, 12)
+						, randIntBetween(1, 28));
 		
 		Member member = new Member(memberName, address, date, feePaid);
 		member.setMemberJoinDate(alteredDate);
@@ -104,7 +107,7 @@ class MemberTest {
 	void member_getId() {
 		String memberName = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		int current = getCurrentCount() + 1;
 		String id = "M" + current;
@@ -119,7 +122,7 @@ class MemberTest {
 	void member_getFeePaid() {
 		String memberName = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		
 		Member member = new Member(memberName, address, date, feePaid);
@@ -132,13 +135,17 @@ class MemberTest {
 	void member_setFeePaid() {
 		String memberName = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = false;
 		
 		Member member = new Member(memberName, address, date, feePaid);
 		member.setFeePaid(true);
 		
 		assertEquals(true, member.getFeePaid());
+	}
+	
+	private int randIntBetween(int min, int max) {
+		return min + RAND.nextInt(max - min);
 	}
 
 	private String getSaltString() {

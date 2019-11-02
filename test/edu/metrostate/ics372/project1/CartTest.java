@@ -2,7 +2,7 @@ package edu.metrostate.ics372.project1;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ class CartTest {
 	@DisplayName("it should instantiate with the memberId and process date")
 	void cart_instantiate() {
 		String memberId = getSaltString();
-		Date date = new Date(); 
+		GregorianCalendar date = new GregorianCalendar(); 
 		
 		Cart cart = new Cart(memberId, date);
 		assertEquals(memberId, cart.getMemberId());
@@ -27,7 +27,7 @@ class CartTest {
 	@DisplayName("it should return an empty cart")
 	void cart_getItemsInCart_empty() {
 		String memberId = getSaltString();
-		Date date = new Date(); 
+		GregorianCalendar date = new GregorianCalendar(); 
 		
 		Cart cart = new Cart(memberId, date);
 		assertTrue(cart.getItemsInCart().isEmpty());
@@ -37,7 +37,7 @@ class CartTest {
 	@DisplayName("it should add an item to the cart")
 	void cart_addToCart() {
 		String memberId = getSaltString();
-		Date date = new Date(); 
+		GregorianCalendar date = new GregorianCalendar(); 
 		
 		Product product1 = new Product(getSaltString(), randIntBetween(100, 10_000), 
 				(double) (Math.round(RAND.nextDouble() * 100) / 100), 
@@ -60,13 +60,48 @@ class CartTest {
 		assertTrue(cart.getItemsInCart().contains(product1));
 		assertTrue(cart.getItemsInCart().contains(product2));
 		assertTrue(cart.getItemsInCart().contains(product3));
+		assertEquals(3, cart.getItemsInCart().size());
+	}
+	
+	@Test
+	@DisplayName("it should adjust the product quantity if same item exists in cart")
+	void cart_addToCart_dup() {
+		String memberId = getSaltString();
+		String productName = getSaltString();
+		Integer productId = randIntBetween(100, 10_000);
+		double price = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		Integer quantity = randIntBetween(100, 10_000);
+		GregorianCalendar date = new GregorianCalendar(); 
+		
+		Product product1 = new Product(productName, productId, price, quantity);
+		
+		Product product2 = new Product(getSaltString(), randIntBetween(100, 10_000), 
+				(double) (Math.round(RAND.nextDouble() * 100) / 100), 
+				randIntBetween(100, 10_000));
+		
+		Product product3 = new Product(productName, productId, price, quantity);
+		
+		Product product4 = new Product(getSaltString(), randIntBetween(100, 10_000), 
+				(double) (Math.round(RAND.nextDouble() * 100) / 100), 
+				randIntBetween(100, 10_000));
+		
+		Cart cart = new Cart(memberId, date);
+		cart.addToCart(product1);
+		cart.addToCart(product2);
+		cart.addToCart(product3);
+		cart.addToCart(product4);
+		
+		assertEquals(3, cart.getItemsInCart().size());
+		assertEquals(quantity * 2, cart.getItemsInCart()
+				.get(cart.getItemsInCart()
+						.indexOf(product1)).getQuantity());
 	}
 	
 	@Test
 	@DisplayName("it should return the total price of items in cart")
 	void cart_getTotal() {
 		String memberId = getSaltString();
-		Date date = new Date(); 
+		GregorianCalendar date = new GregorianCalendar(); 
 		
 		Product product1 = new Product(getSaltString(), randIntBetween(100, 10_000), 
 				(double) (Math.round(RAND.nextDouble() * 100) / 100), 
@@ -98,7 +133,7 @@ class CartTest {
 	void cart_equals_false() {
 		String memberId1 = getSaltString();
 		String memberId2 = getSaltString();
-		Date date = new Date(); 
+		GregorianCalendar date = new GregorianCalendar(); 
 		
 		Cart cart1 = new Cart(memberId1, date);
 		Cart cart2 = new Cart(memberId2, date);
@@ -110,7 +145,7 @@ class CartTest {
 	@DisplayName("it should return true if the carts are equal")
 	void cart_equals_true() {
 		String memberId1 = getSaltString();
-		Date date = new Date(); 
+		GregorianCalendar date = new GregorianCalendar(); 
 		
 		Cart cart1 = new Cart(memberId1, date);
 		Cart cart2 = new Cart(memberId1, date);

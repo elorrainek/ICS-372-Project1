@@ -1,21 +1,22 @@
 package edu.metrostate.ics372.project1;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Member implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private String name;
 	private String address;
-	private Date date;
+	private GregorianCalendar date;
 	private static final String MEMBER_STRING = "M";
 	private boolean feePaid;
 
-	public Member(String name, String address, Date date, boolean feePaid) {
+	public Member(String name, String address, GregorianCalendar GregorianCalendar, 
+			boolean feePaid) {
 		this.name = name;
 		this.address = address;
-		this.date = date;
+		this.date = GregorianCalendar;
 		id = MEMBER_STRING + (MemberIdServer.instance()).getId();
 		this.feePaid = feePaid;
 	}
@@ -46,11 +47,11 @@ public class Member implements Serializable {
 		
 	}
 
-	public Date getMemberJoinDate() {
+	public GregorianCalendar getMemberJoinDate() {
 		return this.date;
 	}
 
-	public void setMemberJoinDate(Date date) {
+	public void setMemberJoinDate(GregorianCalendar date) {
 		this.date = date;
 	}
 

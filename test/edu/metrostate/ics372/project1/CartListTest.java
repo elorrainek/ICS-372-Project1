@@ -2,7 +2,7 @@ package edu.metrostate.ics372.project1;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
@@ -35,16 +35,16 @@ class CartListTest {
 		Product product = new Product(getSaltString(), randIntBetween(100, 10_000), 
 				(double) (Math.round(RAND.nextDouble() * 100) / 100), randIntBetween(100, 10_000));
 		
-		cl.addToCart(getSaltString(), new Date(), product);
+		cl.addToCart(getSaltString(), new GregorianCalendar(), product);
 		
-		assertNull(cl.search(getSaltString(), new Date()));
+		assertNull(cl.search(getSaltString(), new GregorianCalendar()));
 	}
 	
 	@Test
 	@DisplayName("it should return a cart object if found in list")
 	void cartList_search() {
 		String memberId = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		CartList.clearInstance();
 		CartList cl = CartList.instance();
 		
@@ -58,7 +58,7 @@ class CartListTest {
 	@DisplayName("it should create a new cart if one doesn't exist")
 	void cartList_addToCart() {
 		String memberId = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		Product product = new Product(getSaltString(), randIntBetween(100, 10_000), 
 				(double) (Math.round(RAND.nextDouble() * 100) / 100), randIntBetween(100, 10_000));
 		

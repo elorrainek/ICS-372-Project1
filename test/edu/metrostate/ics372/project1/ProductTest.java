@@ -117,12 +117,11 @@ class ProductTest {
 		int quantity = randIntBetween(100, 10_000);
 		int adjustedQuantity = randIntBetween(100, 10_000);
 		Double price = (double) (Math.round(RAND.nextDouble() * 100) / 100);
-		int expected = quantity + adjustedQuantity;
 		
 		Product product = new Product(productName, productId, price, quantity);
 		product.adjustQuantity(adjustedQuantity);
 		
-		assertEquals(expected, product.getQuantity());
+		assertEquals(adjustedQuantity, product.getQuantity());
 	}
 	
 	@Test

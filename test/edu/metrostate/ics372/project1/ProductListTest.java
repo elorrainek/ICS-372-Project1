@@ -282,6 +282,7 @@ class ProductListTest {
 		
 		ProductList.clearInstance();
 		ProductList productList = ProductList.instance();
+		productList.addNewProduct(productName1, productId1, price1, quantity1);
 		productList.adjustQuantity(p1, 2);
 		
 		assertEquals(quantity1 - 2, productList.search(productId1).getQuantity());

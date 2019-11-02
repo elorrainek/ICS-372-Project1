@@ -1,8 +1,13 @@
 package edu.metrostate.ics372.project1;
 
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 public class GroceryStore implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -44,8 +49,8 @@ public class GroceryStore implements Serializable {
 		}
 	}
 
-	public boolean addToCart(String memberId, Date date, Integer productId, 
-			Integer quantity) {
+	public boolean addToCart(String memberId, GregorianCalendar date, 
+			Integer productId, Integer quantity) {
 		Product product = inventory.search(productId);
 		inventory.adjustQuantity(product, quantity);
 		
@@ -63,7 +68,8 @@ public class GroceryStore implements Serializable {
 //	}
 	
 	//String name, String address, Date date, boolean feePaid
-	public boolean addToMemberList(String name, String address, Date date, boolean feePaid) {
+	public boolean addToMemberList(String name, String address, 
+			GregorianCalendar date, boolean feePaid) {
 		return members.addNewMember(new Member(name, address, date, feePaid));
 	}
 	
@@ -87,6 +93,14 @@ public class GroceryStore implements Serializable {
 		return inventory.getAllProducts();
 	}
 	
+	public List<Product> retrieveCart(String memberId, GregorianCalendar date) {
+		return processedOrders.search(memberId, date).getItemsInCart();
+	}
+	
+	public List<Product> getLowInventoryItems() {
+		return inventory.getLowInventoryItems();
+	}
+	
 	public static void clearInstance() {
 		groceryStore = null;
 	}
@@ -97,16 +111,16 @@ public class GroceryStore implements Serializable {
 	
 	public static GroceryStore retrieve() {
 		try {
-			FileInputStream uploadFile = new FileInputStream("GroceryStoreData");
-			ObjectInputSteam input = new ObjectInputStream(uploadFile);
-			input.readObject();
-			MemberIdServer.retrieve(input);
+            FileInputStream file = new FileInputStream("LibraryData");
+            ObjectInputStream input = new ObjectInputStream(file);
+            groceryStore = (GroceryStore) input.readObject();
+            MemberIdServer.retrieve(input);
 			return groceryStore;
 		} catch (IOException ioe) {
-			ioe.PrintStackStrace();
+			ioe.printStackTrace();
 			return null;
 		} catch (ClassNotFoundException cnfe) {
-			cnfe.PrintStackTrace();
+			cnfe.printStackTrace();
 			return null;
 		}
 	}	
@@ -114,12 +128,12 @@ public class GroceryStore implements Serializable {
 	public static boolean save() {
 		ObjectOutputStream saveData = null;
 		try {
-			FileOutputStream saveFile = new FileOutputStream("GroceryStoreData");
-			saveData = new OutputObjectStream(saveFile);
-			saveData.writeObject(groceryStore);
-			saveData.writeObject(MemberIdServer.instance());
-			saveData.close();
-			return true;
+            FileOutputStream file = new FileOutputStream("GroceryStoreDate");
+            ObjectOutputStream output = new ObjectOutputStream(file);
+            output.writeObject(groceryStore);
+            output.writeObject(MemberIdServer.instance());
+            file.close();
+            return true;
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			return false;
@@ -128,13 +142,13 @@ public class GroceryStore implements Serializable {
 	
 	private void writeObject(java.io.ObjectOutputStream output) throws IOException {
 		output.defaultWriteObject();
-		output.writeobject(groceryStore);
+		output.writeObject(groceryStore);
 	}
 	
-	private void readObject(java.io.ObjectInputStream input) throws IOException {
+	private void readObject(java.io.ObjectInputStream input) throws IOException, ClassNotFoundException {
 		input.defaultReadObject();
 		if (groceryStore == null) {
-			groceryStore = (groceryStore) input.readObject();
+			groceryStore = (GroceryStore) input.readObject();
 		}
 		else {
 			input.readObject();

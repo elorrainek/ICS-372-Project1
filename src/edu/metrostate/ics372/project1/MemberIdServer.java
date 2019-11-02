@@ -1,5 +1,7 @@
 package edu.metrostate.ics372.project1;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 public class MemberIdServer implements Serializable {
@@ -36,6 +38,17 @@ public class MemberIdServer implements Serializable {
 	
 	public static void clearInstance() {
 		server = null;
+	}
+
+	public static void retrieve(ObjectInputStream input) {
+        try {
+            server = (MemberIdServer) input.readObject();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } catch (Exception cnfe) {
+            cnfe.printStackTrace();
+        }
+		
 	}
 
 }
