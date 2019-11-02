@@ -2,7 +2,7 @@ package edu.metrostate.ics372.project1;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class MemberListTest {
 	void memberList_addNewMember() {
 		String name = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
@@ -35,7 +35,7 @@ class MemberListTest {
 	void memberList_addNewMember_exists() {
 		String name = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
@@ -50,7 +50,7 @@ class MemberListTest {
 	void memberList_search() {
 		String name = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
@@ -65,14 +65,15 @@ class MemberListTest {
 	void memberList_search_null() {
 		String name = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
 		MemberList members = MemberList.instance();
 		members.addNewMember(member);
 		
-		Member searchedMember = new Member(getSaltString(), getSaltString(), new Date(), RAND.nextBoolean());
+		Member searchedMember = new Member(getSaltString(), getSaltString(), 
+				new GregorianCalendar(), RAND.nextBoolean());
 		
 		assertFalse(member.equals(members.search(searchedMember.getMemberId())));
 	}
@@ -82,7 +83,7 @@ class MemberListTest {
 	void memberList_removeMember() {
 		String name = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
@@ -97,14 +98,15 @@ class MemberListTest {
 	void memberList_removeMember_dne() {
 		String name = getSaltString();
 		String address = getSaltString();
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		boolean feePaid = RAND.nextBoolean();
 		Member member = new Member(name, address, date, feePaid);
 		
 		MemberList members = MemberList.instance();
 		members.addNewMember(member);
 		
-		Member removeMember = new Member(getSaltString(), getSaltString(), new Date(), RAND.nextBoolean());
+		Member removeMember = new Member(getSaltString(), getSaltString(), 
+				new GregorianCalendar(), RAND.nextBoolean());
 		
 		assertFalse(members.removeMember(removeMember.getMemberId()));
 	}
@@ -114,19 +116,19 @@ class MemberListTest {
 	void memberList_getAllMembers() {
 		String name1 = getSaltString();
 		String address1 = getSaltString();
-		Date date1 = new Date();
+		GregorianCalendar date1 = new GregorianCalendar();
 		boolean feePaid1 = RAND.nextBoolean();
 		Member member1 = new Member(name1, address1, date1, feePaid1);
 		
 		String name2 = getSaltString();
 		String address2 = getSaltString();
-		Date date2 = new Date();
+		GregorianCalendar date2 = new GregorianCalendar();
 		boolean feePaid2 = RAND.nextBoolean();
 		Member member2 = new Member(name2, address2, date2, feePaid2);
 		
 		String name3 = getSaltString();
 		String address3 = getSaltString();
-		Date date3 = new Date();
+		GregorianCalendar date3 = new GregorianCalendar();
 		boolean feePaid3 = RAND.nextBoolean();
 		Member member3 = new Member(name3, address3, date3, feePaid3);
 		

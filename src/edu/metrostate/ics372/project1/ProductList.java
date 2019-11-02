@@ -5,10 +5,13 @@ import java.util.ArrayList;
 
 public class ProductList {
 	private List<Product> listOfProducts;
+	private final int lowInventory = 5;
+	private List<Product> lowInventoryList;
 	private static ProductList productList;
 	
 	private ProductList() {
 		listOfProducts = new ArrayList<>();
+		lowInventoryList = new ArrayList<>();
 	}
 	
 	public static ProductList instance() {
@@ -43,16 +46,13 @@ public class ProductList {
 	}
 	
 	public boolean addNewProduct(String productName, Integer productId, Double price) {
-		Product existingProduct = null;
 		Product searchedProduct = search(productId);
 		
 		if (searchedProduct == null) {
 			listOfProducts.add(new Product(productName, productId, price));
 		} else {
-			existingProduct = new Product(searchedProduct.getProductName(), 
-					searchedProduct.getProductId(), searchedProduct.getPrice());
-			listOfProducts.remove(searchedProduct);
-			listOfProducts.add(existingProduct);
+			searchedProduct.adjustQuantity(searchedProduct.getQuantity() + 1);
+			listOfProducts.set(listOfProducts.indexOf(searchedProduct), searchedProduct);
 		}
 		
 		return true;
@@ -61,14 +61,11 @@ public class ProductList {
 	public boolean addNewProduct(String productName, Integer productId, Double price, 
 			Integer quantity) {
 		Product searchedProduct = search(productId);
-		
 		if (searchedProduct == null) {
-			listOfProducts.add(new Product(productName, productId, price));
+			listOfProducts.add(new Product(productName, productId, price, quantity));
 		} else {
-			listOfProducts.set(listOfProducts.indexOf(searchedProduct),
-					new Product(searchedProduct.getProductName(), 
-							searchedProduct.getProductId(), searchedProduct.getPrice(), 
-							searchedProduct.getQuantity() + quantity));
+			searchedProduct.adjustQuantity(searchedProduct.getQuantity() + quantity);
+			listOfProducts.set(listOfProducts.indexOf(searchedProduct), searchedProduct);
 		}
 		
 		return true;
@@ -76,6 +73,28 @@ public class ProductList {
 	
 	public List<Product> getAllProducts() {
 		return this.listOfProducts;
+	}
+	
+	public List<Product> getLowInventoryItems() {
+		return this.lowInventoryList;
+	}
+	
+	public void addToLowInventoryItemsList(Product product) {
+		if (lowInventoryList.isEmpty() || 
+				lowInventoryList.get(lowInventoryList.indexOf(product)) == null) {
+			lowInventoryList.add(product);
+		}
+	}
+	
+	public void removeFromLowInventoryList(Product product) {
+		if (!lowInventoryList.isEmpty() && 
+				lowInventoryList.get(lowInventoryList.indexOf(product)) != null) {
+			lowInventoryList.remove(product);
+		}
+	}
+	
+	public boolean checkLowInventory(Product product) {
+		return product.getQuantity() <= lowInventory;
 	}
 	
 	public boolean adjustProductPrice(Integer productId, double price) {

@@ -2,7 +2,7 @@ package edu.metrostate.ics372.project1;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
@@ -76,7 +76,7 @@ class GroceryStoreTest {
 		String memberId = getSaltString();
 		Integer productId = randIntBetween(100, 10_000);
 		Double price = (double) (Math.round(RAND.nextDouble() * 100) / 100);
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		
 		GroceryStore.clearInstance();
 		GroceryStore gs = GroceryStore.instance();
@@ -95,7 +95,7 @@ class GroceryStoreTest {
 		Integer productId = randIntBetween(100, 10_000);
 		Double price = (double) (Math.round(RAND.nextDouble() * 100) / 100);
 		Integer quantity = randIntBetween(100, 10_000);
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		
 		GroceryStore.clearInstance();
 		CartList.clearInstance();
@@ -116,7 +116,7 @@ class GroceryStoreTest {
 		String productName = getSaltString();
 		Integer productId = randIntBetween(100, 10_000);
 		Double price = (double) (Math.round(RAND.nextDouble() * 100) / 100);
-		Date date = new Date();
+		GregorianCalendar date = new GregorianCalendar();
 		Integer quantity = randIntBetween(100, 10_000);
 		
 		GroceryStore.clearInstance();
@@ -125,6 +125,116 @@ class GroceryStoreTest {
 		gs.addToCart(memberId, date, productId, 1);
 		
 		assertEquals(quantity - 1, gs.getProductInfo(productName).getQuantity());
+		assertEquals(1, gs.getProcessedOrders()
+				.search(memberId, date)
+				.getItemsInCart()
+				.get(0)
+				.getQuantity());
+	}
+	
+	@Test
+	@DisplayName("it should return a list of all low inventory items after cart add")
+	void groceryStore_addToCart_lowInventory() {
+		String memberId = getSaltString();
+		GregorianCalendar date = new GregorianCalendar();
+		String productName1 = getSaltString();
+		Integer productId1 = randIntBetween(100, 10_000);
+		Double price1 = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		Integer quantity1 = 6;
+		
+		String productName2 = getSaltString();
+		Integer productId2 = randIntBetween(100, 10_000);
+		Double price2 = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		Integer quantity2 = 6;
+		
+		String productName3 = getSaltString();
+		Integer productId3 = randIntBetween(100, 10_000);
+		Double price3 = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		Integer quantity3 = randIntBetween(100, 10_000);
+		
+		GroceryStore.clearInstance();
+		GroceryStore gs = GroceryStore.instance();
+		gs.addToInventory(productName1, productId1, price1, quantity1);
+		gs.addToInventory(productName2, productId2, price2, quantity2);
+		gs.addToInventory(productName3, productId3, price3, quantity3);
+		gs.addToCart(memberId, date, productId1, 1);
+		gs.addToCart(memberId, date, productId2, 3);
+		gs.addToCart(memberId, date, productId3, 3);
+		
+		assertTrue(!gs.getLowInventoryItems().isEmpty());
+	}
+	
+	@Test
+	@DisplayName("it should retrieve the member's cart")
+	void groceryStore_retrieveCart() {
+		String memberId = getSaltString();
+		GregorianCalendar date = new GregorianCalendar();
+		
+		String productName1 = getSaltString();
+		Integer productId1 = randIntBetween(100, 10_000);
+		Double price1 = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		Integer quantity1 = randIntBetween(100, 10_000);
+		
+		String productName2 = getSaltString();
+		Integer productId2 = randIntBetween(100, 10_000);
+		Double price2 = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		Integer quantity2 = randIntBetween(100, 10_000);
+		
+		String productName3 = getSaltString();
+		Integer productId3 = randIntBetween(100, 10_000);
+		Double price3 = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		Integer quantity3 = randIntBetween(100, 10_000);
+		
+		
+		GroceryStore.clearInstance();
+		GroceryStore gs = GroceryStore.instance();
+		gs.addToInventory(productName1, productId1, price1, quantity1);
+		gs.addToInventory(productName2, productId2, price2, quantity2);
+		gs.addToInventory(productName3, productId3, price3, quantity3);
+		
+		gs.addToCart(memberId, date, productId1, 2);
+		gs.addToCart(memberId, date, productId2, 2);
+		gs.addToCart(memberId, date, productId3, 2);
+		
+		assertEquals(3, gs.retrieveCart(memberId, date).size());
+	}
+	
+	@Test
+	@DisplayName("it should retrieve processed carts between the specified dates for"
+			+ "the specified member")
+	void groceryStore_retrieveCartBetweenDates() {
+		String memberId1 = getSaltString();
+		String memberId2 = getSaltString();
+		String memberId3 = getSaltString();
+		GregorianCalendar date1 = new GregorianCalendar();
+		GregorianCalendar date2 = new GregorianCalendar();
+		GregorianCalendar date3 = new GregorianCalendar();
+		
+		String productName1 = getSaltString();
+		Integer productId1 = randIntBetween(100, 10_000);
+		Double price1 = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		Integer quantity1 = randIntBetween(100, 10_000);
+		
+		String productName2 = getSaltString();
+		Integer productId2 = randIntBetween(100, 10_000);
+		Double price2 = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		Integer quantity2 = randIntBetween(100, 10_000);
+		
+		String productName3 = getSaltString();
+		Integer productId3 = randIntBetween(100, 10_000);
+		Double price3 = (double) (Math.round(RAND.nextDouble() * 100) / 100);
+		Integer quantity3 = randIntBetween(100, 10_000);
+		
+		
+		GroceryStore.clearInstance();
+		GroceryStore gs = GroceryStore.instance();
+		gs.addToInventory(productName1, productId1, price1, quantity1);
+		gs.addToInventory(productName2, productId2, price2, quantity2);
+		gs.addToInventory(productName3, productId3, price3, quantity3);
+		
+		gs.addToCart(memberId1, date1, productId1, 2);
+		gs.addToCart(memberId2, date2, productId2, 2);
+		gs.addToCart(memberId3, date3, productId3, 2);
 	}
 	
 //	@Test

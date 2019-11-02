@@ -1,8 +1,11 @@
 package edu.metrostate.ics372.project1;
 
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 public class GroceryStore implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -44,8 +47,8 @@ public class GroceryStore implements Serializable {
 		}
 	}
 
-	public boolean addToCart(String memberId, Date date, Integer productId, 
-			Integer quantity) {
+	public boolean addToCart(String memberId, GregorianCalendar date, 
+			Integer productId, Integer quantity) {
 		Product product = inventory.search(productId);
 		inventory.adjustQuantity(product, quantity);
 		
@@ -63,7 +66,8 @@ public class GroceryStore implements Serializable {
 //	}
 	
 	//String name, String address, Date date, boolean feePaid
-	public boolean addToMemberList(String name, String address, Date date, boolean feePaid) {
+	public boolean addToMemberList(String name, String address, 
+			GregorianCalendar date, boolean feePaid) {
 		return members.addNewMember(new Member(name, address, date, feePaid));
 	}
 	
@@ -85,6 +89,14 @@ public class GroceryStore implements Serializable {
 	
 	public List<Product> retrieveAllProducts() {
 		return inventory.getAllProducts();
+	}
+	
+	public List<Product> retrieveCart(String memberId, GregorianCalendar date) {
+		return processedOrders.search(memberId, date).getItemsInCart();
+	}
+	
+	public List<Product> getLowInventoryItems() {
+		return inventory.getLowInventoryItems();
 	}
 	
 	public static void clearInstance() {

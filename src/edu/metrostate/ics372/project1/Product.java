@@ -46,7 +46,7 @@ public class Product {
 	}
 
 	public void adjustQuantity(Integer quantity) {
-		this.quantity += quantity;
+		this.quantity = quantity;
 	}
 	
 	@Override
@@ -60,5 +60,10 @@ public class Product {
 		}
 		
 		return isTrue;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s\t\t\t%s\t\t$%s", productName, quantity, price);
 	}
 }
