@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class MemberIdServer implements Serializable {
 	/**
-	 * 
+	 * Fields
 	 */
 	private static final long serialVersionUID = 1L;
 	private int idCounter;

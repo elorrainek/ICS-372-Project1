@@ -258,5 +258,4 @@ public class GroceryStore implements Serializable {
 			input.readObject();
 		}
 	}
-
 }
