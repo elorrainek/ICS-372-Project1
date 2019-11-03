@@ -1,9 +1,12 @@
 package edu.metrostate.ics372.project1;
 
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.GregorianCalendar;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class UserInterface {
 	private static UserInterface userInterface;
@@ -39,7 +42,7 @@ public class UserInterface {
 		return instance;
 	}
 	
-	public String help() {
+	String help() {
 		String message = "Enter a number between 0 and 12 as explained below:\n";
 		
 		message += "0 to Exit\n";
@@ -61,7 +64,7 @@ public class UserInterface {
 		return message;
 	}
 	
-	public String getInput(BufferedReader br) {
+	private String getInput(BufferedReader br) {
 		String input = "";
 		
 		try {
@@ -73,14 +76,14 @@ public class UserInterface {
 		return input;
 	}
 	
-	public String prompt(String message, BufferedReader br) {
+	private String prompt(String message, BufferedReader br) {
 		System.out.println(message);
 		String input = getInput(br);
 		
 		return input;
 	}
 	
-	public boolean yesOrNo(String message, BufferedReader br) {
+	private boolean yesOrNo(String message, BufferedReader br) {
 		boolean isYes = false;
 		boolean continueLoop = true;
 		String option = null;
@@ -100,7 +103,7 @@ public class UserInterface {
 		return isYes;
 	}
 	
-	public void removeMember(BufferedReader br) {
+	private void removeMember(BufferedReader br) {
 		String message = "Enter the memberId (include leading 'M'): ";
 		do {
 			String memberId = prompt(message, br);
@@ -115,7 +118,7 @@ public class UserInterface {
 		} while(yesOrNo(message, br));
 	}
 	
-	public void addNewMember(BufferedReader br) {
+	private void addNewMember(BufferedReader br) {
 		do {
 			String name = prompt("Enter the new member's name: ", br);
 			String address = prompt("Enter the new member's address: ", br);
@@ -167,18 +170,21 @@ public class UserInterface {
 		return validDouble;
 	}
 	
-	public void addNewProduct(BufferedReader br) {
+	private void addNewProduct(BufferedReader br) {
 		do {
 			String productName = prompt("Enter the new product name: ", br);
 			Integer productId = validInt("Enter the new product id: ", br);
 			Double productPrice = validDouble("Enter the product price: ", br);
 			Integer quantity = null;
+			boolean wasSuccessful = false;
 			if(yesOrNo("Do you know the product quantity? (y/n) ", br)) {
 				quantity = validInt("Enter the product quantity: ", br); 
+				wasSuccessful = groceryStore.addToInventory(productName, productId, 
+						productPrice, quantity);				
+			} else {
+				wasSuccessful = groceryStore.addToInventory(productName, productId, 
+						productPrice);
 			}
-			
-			boolean wasSuccessful = groceryStore.addToInventory(productName, productId, 
-					productPrice, quantity);
 			
 			if (wasSuccessful) {
 				System.out.println(productName + " was successfully added");
@@ -188,7 +194,7 @@ public class UserInterface {
 		} while(yesOrNo("Add another product? ", br));
 	}
 	
-	public void adjustPrice(BufferedReader br) {
+	private void adjustPrice(BufferedReader br) {
 		do {
 			Integer productId = validInt("Enter the product id: ", br);
 			Double productPrice = validDouble("Enter the adjusted price: ", br);
@@ -203,7 +209,7 @@ public class UserInterface {
 		} while(yesOrNo("Adjust another product price? (y/n) ", br));
 	}
 	
-	public void getProductInfo(BufferedReader br) {
+	private void getProductInfo(BufferedReader br) {
 		do {
 			String productName = prompt("Enter the product name: ", br);			
 			Product product = groceryStore.getProductInfo(productName);
@@ -217,10 +223,107 @@ public class UserInterface {
 		} while(yesOrNo("Search for another product? (y/n)", br));
 	}
 	
-	public void checkoutMember(BufferedReader br) {
+	private void checkoutMember(BufferedReader br) {
+		String memberId = prompt("Enter the member id: ", br);
+		GregorianCalendar date = new GregorianCalendar();
 		do {
 			Integer productId = validInt("Enter the product id", br);
+			Integer quantity = validInt("Enter the quantity of " + productId + " : ", br);
+			
+			boolean wasSuccessful = groceryStore.addToCart(memberId, date, productId, quantity);
+			
+			if (wasSuccessful) {
+				List<Product> cart = groceryStore.retrieveCart(memberId, date);
+				for(Product product: cart) {
+					System.out.println(product.getProductName() + "\t\tQty: " + product.getQuantity()
+					+ "\t\tItem price: " + product.getPrice() + "\t\tTotal price: $" + 
+							(product.getQuantity() * product.getPrice()));
+				}
+			}
 		}while(yesOrNo("Process more items? (y/n) ", br));
+		
+		List<Product> lowInventory = groceryStore.getLowInventoryItems();
+		if (!lowInventory.isEmpty()) {
+			System.out.println("The following items have low inventory: ");
+			for (Product product: lowInventory) {
+				System.out.println(product.getProductName());
+			}
+		}
+	}
+	
+	private void processShipment(BufferedReader br) {
+		do {
+			Integer productId = validInt("Enter the product id: ", br);
+			Integer quantity = validInt("Enter the quantity of " + productId + ": ", br);
+			boolean wasSuccessful = groceryStore.addToInventory(productId, quantity);
+			
+			if (!wasSuccessful) {
+				String productName = prompt("Item does not exist in inventory, please enter item name: "
+						, br);
+				double price = validDouble("Enter the item price: "
+						, br);
+				groceryStore.addToInventory(productName, productId, price, quantity);
+			}
+			
+			System.out.println("Product successfully added!");
+			System.out.println("Product name: " + 
+			groceryStore.getProductInfo(productId).getProductName() + "\t\tQty: " + 
+			groceryStore.getProductInfo(productId).getQuantity() + "\t\tPrice: " + 
+			groceryStore.getProductInfo(productId).getPrice());
+			
+		}while(yesOrNo("Process more items? (y/n) ", br));
+	}
+	
+	private boolean validDate(int year, int month, int day) {
+		boolean validDate = false;
+		
+		try {
+		    LocalDate ld = LocalDate.of( year , month , day ) ;
+		    validDate = true;
+		} catch ( DateTimeParseException e ) {
+			System.out.println("Invalid date!");
+		}
+		
+		return validDate;
+	}
+	
+	private void printTransactions(BufferedReader br) {
+		do {
+			boolean validStartDate = false;
+			boolean validEndDate = false;
+			Integer startYear = null;
+			Integer startMonth = null;
+			Integer startDay = null;
+			Integer endYear = null;
+			Integer endMonth = null;
+			Integer endDay = null;
+			do {
+				startYear = validInt("Enter the beginning year to search: ", br);
+				startMonth = validInt("Enter the beginning month to search: ", br);
+				startDay = validInt("Enter the beginning day to search: ", br);
+				validStartDate = validDate(startYear, startMonth, startDay);
+			}while(!validStartDate);
+			GregorianCalendar start = new GregorianCalendar(startYear, startMonth, startDay);
+			
+			do {
+				endYear = validInt("Enter the end year to search: ", br);
+				endMonth = validInt("Enter the end month to search: ", br);
+				endDay = validInt("Enter the end day to search: ", br);
+				validStartDate = validDate(endYear, endMonth, endDay);
+			}while(!validEndDate);
+			GregorianCalendar end = new GregorianCalendar(endYear, endMonth, endDay);
+			String memberId = prompt("Enter the member ID: ", br);
+			List<Cart> transactions = groceryStore.retrieveTransactions(memberId, start, end);
+			
+			if (transactions.isEmpty()) {
+				System.out.println("No records found!");
+			} else {
+				for (Cart cart: transactions) {
+					System.out.println(cart);
+				}
+			}
+		}while(yesOrNo("Query for another set of transactions? ", br));
+		
 	}
 	
 	private void save() {
@@ -259,30 +362,38 @@ public class UserInterface {
 				break;
 			case ADJUST_PRICE: // 8
 				adjustPrice(br);
+				System.out.println("\n\n" + help());
 				break;
 			case ADD_MEMBER: // 1
 				addNewMember(br);
+				System.out.println("\n\n" + help());
 				break;
 			case REMOVE_MEMBER: // 2
 				removeMember(br);
+				System.out.println("\n\n" + help());
 				break;
 			case GET_MEMBER_INFO: // 3
 				//implement
 				break;
 			case ADD_PRODUCT: // 4
 				addNewProduct(br);
+				System.out.println("\n\n" + help());
 				break;
 			case CHECKOUT_MEMBER: // 5
 				checkoutMember(br);
+				System.out.println("\n\n" + help());
 				break;
 			case PRODUCT_INFO: // 6
 				getProductInfo(br);
+				System.out.println("\n\n" + help());
 				break;
 			case PROCESS_SHIPMENT: // 7
-				//implement
+				processShipment(br);
+				System.out.println("\n\n" + help());
 				break;
 			case PRINT_TRANSACTIONS: //9
-				//implement
+				printTransactions(br);
+				System.out.println("\n\n" + help());
 				break;
 			case PRINT_MEMBER_DETAILS: //10
 				System.out.println(groceryStore.retrieveAllMembers());

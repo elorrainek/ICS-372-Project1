@@ -72,6 +72,26 @@ public class ProductList {
 	 * @param price Price of the Product added
 	 * @return true
 	 */
+	public boolean addNewProduct(Integer productId, Integer quantity) {
+		boolean wasSuccessful = false;
+		Product searchedProduct = search(productId);
+		
+		if (searchedProduct != null) {
+			searchedProduct.adjustQuantity(searchedProduct.getQuantity() + quantity);
+			listOfProducts.set(listOfProducts.indexOf(searchedProduct), searchedProduct);
+			wasSuccessful = true;
+		}
+		
+		return wasSuccessful;
+	}
+	
+	/**
+	 * 
+	 * @param productName Product name added on the Cart
+	 * @param productId Product Id added on the Cart
+	 * @param price Price of the Product added
+	 * @return true
+	 */
 	public boolean addNewProduct(String productName, Integer productId, Double price) {
 		Product searchedProduct = search(productId);
 		

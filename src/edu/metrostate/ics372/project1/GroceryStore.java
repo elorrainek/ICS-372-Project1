@@ -44,13 +44,23 @@ public class GroceryStore implements Serializable {
 		
 		return groceryStore;
 	}
+	
+	/**
+	 * add to Inventory Method. 
+	 * @param productName
+	 * @param productId
+	 * @return returns boolean if the operation was successful 
+	 */
+	public boolean addToInventory(Integer productId, Integer quantity) {
+		return inventory.addNewProduct(productId, quantity);
+	}
 
 	/**
 	 * add to Inventory Method. 
 	 * @param productName
 	 * @param productId
 	 * @param price
-	 * @return returns the new product that has been added to the inventory product list instance without the quantity. 
+	 * @return returns boolean if the operation was successful 
 	 */
 	public boolean addToInventory(String productName, Integer productId, Double price) {
 		return inventory.addNewProduct(productName, productId, price);
@@ -62,7 +72,7 @@ public class GroceryStore implements Serializable {
 	 * @param productId
 	 * @param price
 	 * @param quantity
-	 * @return the inventory instance instance where a new Product has been added with the quantity.
+	 * @return returns boolean if the operation was successful
 	 */
 	public boolean addToInventory(String productName, Integer productId, Double price, 
 			Integer quantity) {
@@ -136,6 +146,15 @@ public class GroceryStore implements Serializable {
 	public Product getProductInfo(String productName) {
 		return inventory.search(productName);
 	}
+	
+	/**
+	 * Getter for the product info, using the product name. 
+	 * @param productName
+	 * @return inventory ProductList instance that is searching for the product name. 
+	 */
+	public Product getProductInfo(Integer productId) {
+		return inventory.search(productId);
+	}
 
 	/**
 	 * Removing from Member List Method. 
@@ -168,6 +187,10 @@ public class GroceryStore implements Serializable {
 	 */
 	public List<Product> retrieveCart(String memberId, GregorianCalendar date) {
 		return processedOrders.search(memberId, date).getItemsInCart();
+	}
+	
+	public List<Cart> retrieveTransactions(String memberId, GregorianCalendar start, GregorianCalendar end) {
+		return processedOrders.retrieveTransactions(memberId, start, end);
 	}
 	
 	public List<Product> getLowInventoryItems() {
@@ -208,7 +231,6 @@ public class GroceryStore implements Serializable {
 	}	
 	
 	public static boolean save() {
-		ObjectOutputStream saveData = null;
 		try {
             FileOutputStream file = new FileOutputStream("GroceryStoreDate");
             ObjectOutputStream output = new ObjectOutputStream(file);
