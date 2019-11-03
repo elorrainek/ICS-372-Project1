@@ -104,6 +104,25 @@ public class CartList {
 		return true;
 	}
 	
+	private boolean compareDates(GregorianCalendar cartDate, 
+			GregorianCalendar start, GregorianCalendar end) {
+		return cartDate.after(start) && cartDate.before(end);
+	}
+	
+	public List<Cart> retrieveTransactions(String memberId, GregorianCalendar start, 
+			GregorianCalendar end) {
+		List<Cart> query = new ArrayList<>();
+		
+		for(Cart cart: listOfCarts) {
+			if (cart.getMemberId().equals(memberId) && 
+					compareDates(cart.getProcessDate(), start, end)) {
+				query.add(cart);
+			}
+		}
+		
+		return query;
+	}
+	
 	public static void clearInstance() {
 		cartList = null;
 	}

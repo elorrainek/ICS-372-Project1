@@ -206,9 +206,11 @@ class GroceryStoreTest {
 		String memberId1 = getSaltString();
 		String memberId2 = getSaltString();
 		String memberId3 = getSaltString();
-		GregorianCalendar date1 = new GregorianCalendar();
-		GregorianCalendar date2 = new GregorianCalendar();
-		GregorianCalendar date3 = new GregorianCalendar();
+		GregorianCalendar start = new GregorianCalendar(1900, 1, 1);
+		GregorianCalendar date1 = new GregorianCalendar(2000, 1, 1);
+		GregorianCalendar date2 = new GregorianCalendar(2010, 1, 1);
+		GregorianCalendar date3 = new GregorianCalendar(2015, 1, 1);
+		GregorianCalendar end = new GregorianCalendar(2020, 1, 1);
 		
 		String productName1 = getSaltString();
 		Integer productId1 = randIntBetween(100, 10_000);
@@ -235,30 +237,11 @@ class GroceryStoreTest {
 		gs.addToCart(memberId1, date1, productId1, 2);
 		gs.addToCart(memberId2, date2, productId2, 2);
 		gs.addToCart(memberId3, date3, productId3, 2);
+		gs.addToCart(memberId1, date2, productId2, 2);
+		gs.addToCart(memberId1, date3, productId3, 2);
+		
+		assertEquals(3, gs.retrieveTransactions(memberId1, start, end).size());
 	}
-	
-//	@Test
-//	@DisplayName("it should return false if product added to cart is null")
-//	void groceryStore_addToCart_false() {
-//		Product product = null;
-//		GroceryStore gs = GroceryStore.instance();
-//		assertFalse(gs.removeFromCart(product));
-//	}
-	
-//	@Test
-//	@DisplayName("it should return true if product added to cart is not null")
-//	void groceryStore_addToCart_true() {
-//		String productName = getSaltString();
-//		int productId = randIntBetween(100, 10_000);
-//		int quantity = randIntBetween(100, 10_000);
-//		Double price = (double) (Math.round(RAND.nextDouble() * 100) / 100);
-//		
-//		Product product = new Product(productName, productId, price, quantity);
-//		GroceryStore gs = GroceryStore.instance();
-//		gs.addToInventory(product);
-//		
-//		assertTrue(gs.addToCart(product));
-//	}
 	
 	private int randIntBetween(int min, int max) {
 		return min + RAND.nextInt(max - min);
