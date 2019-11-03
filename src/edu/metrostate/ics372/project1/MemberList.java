@@ -11,6 +11,9 @@ import java.util.ArrayList;
  *	MEMBERLIST CLASS
  */
 public class MemberList implements Serializable{
+	/**
+	 * Fields
+	 * */
 	private static final long serialVersionUID = 1L;
 	private List<Member> listOfMembers;
 	private static MemberList memberList;

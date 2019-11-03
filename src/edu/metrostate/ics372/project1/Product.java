@@ -1,15 +1,18 @@
 package edu.metrostate.ics372.project1;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author Group: Don Nguyen, Sadeq Husein, Elise Kurtz, Mohamed Abullahi, Ibsa Tilahun
  *         
  *		PRODUCT CLASS
  */
-public class Product {
+public class Product implements Serializable{
 	/**
 	 * Fields
 	 * */
+	private static final long serialVersionUID = 1L;
 	String productName;
 	Integer productId;
 	Double price;

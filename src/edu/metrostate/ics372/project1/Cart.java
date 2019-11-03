@@ -1,5 +1,6 @@
 package edu.metrostate.ics372.project1;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -10,10 +11,11 @@ import java.util.List;
  *
  *	CART CLASS 
  */
-public class Cart {
+public class Cart implements Serializable{
 	/**
 	 * Fields
 	 * */
+	private static final long serialVersionUID = 1L;
 	private String memberId;
 	private GregorianCalendar date;
 	private List<Product> cart;

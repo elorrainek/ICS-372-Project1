@@ -1,9 +1,14 @@
 package edu.metrostate.ics372.project1;
 
 import java.util.List;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ProductList {
+public class ProductList implements Serializable {
+	/**
+	 * Fields
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<Product> listOfProducts;
 	private final int lowInventory = 5;
 	private List<Product> lowInventoryList;
