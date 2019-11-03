@@ -216,10 +216,10 @@ public class GroceryStore implements Serializable {
 	
 	public static GroceryStore retrieve() {
 		try {
-            FileInputStream file = new FileInputStream("LibraryData");
-            ObjectInputStream input = new ObjectInputStream(file);
-            groceryStore = (GroceryStore) input.readObject();
-            MemberIdServer.retrieve(input);
+            		FileInputStream file = new FileInputStream("GroceryStoreData");
+           		ObjectInputStream input = new ObjectInputStream(file);
+            		groceryStore = (GroceryStore) input.readObject();
+            		MemberIdServer.retrieve(input);
 			return groceryStore;
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -232,12 +232,12 @@ public class GroceryStore implements Serializable {
 	
 	public static boolean save() {
 		try {
-            FileOutputStream file = new FileOutputStream("GroceryStoreDate");
-            ObjectOutputStream output = new ObjectOutputStream(file);
-            output.writeObject(groceryStore);
-            output.writeObject(MemberIdServer.instance());
-            file.close();
-            return true;
+            		FileOutputStream file = new FileOutputStream("GroceryStoreDate");
+            		ObjectOutputStream output = new ObjectOutputStream(file);
+            		output.writeObject(groceryStore);
+            		output.writeObject(MemberIdServer.instance());
+            		file.close();
+            		return true;
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			return false;
